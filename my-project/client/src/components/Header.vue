@@ -1,11 +1,24 @@
 <template>
   <div class="fixed header">
     <div class="rightmenu">
-      <div class="logo" @click="navigateTo({ name: 'home' })">logo</div>
+      <v-btn class="logo" @click="navigateTo({ name: 'home' })">Home</v-btn>
     </div>
     <div class="leftmenu">
-      <v-btn @click="navigateTo({ name: 'userRegister' })"> Register </v-btn>
-      <v-btn @click="navigateTo({ name: 'userLogin' })"> Login </v-btn>
+      <v-btn
+        v-if="!$store.state.isUserLoggedIn"
+        @click="navigateTo({ name: 'userRegister' })"
+      >
+        Register
+      </v-btn>
+      <v-btn
+        v-if="!$store.state.isUserLoggedIn"
+        @click="navigateTo({ name: 'userLogin' })"
+      >
+        Login
+      </v-btn>
+      <v-btn v-if="$store.state.isUserLoggedIn" @click="logout">
+        Log out
+      </v-btn>
     </div>
   </div>
 </template>
@@ -20,6 +33,13 @@ export default {
   methods: {
     navigateTo(route) {
       this.$router.push(route);
+    },
+    logout() {
+      this.$store.dispatch("setToken", null);
+      this.$store.dispatch("setUser", null);
+      this.$router.push({
+        name: "home",
+      });
     },
   },
 };
