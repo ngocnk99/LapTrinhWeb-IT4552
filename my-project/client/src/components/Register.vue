@@ -24,6 +24,7 @@
             <br />
             <v-text-field
               v-model="confirm_password"
+              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
               type="password"
               name="password"
               placeholder="Password"
@@ -51,6 +52,7 @@ export default {
       password: "",
       confirm_password: "",
       error: "",
+      show1: false,
     };
   },
   watch: {
@@ -67,6 +69,9 @@ export default {
           const response = await UserAuthenticationService.register({
             email: this.email,
             password: this.password,
+          });
+          this.$router.push({
+            name: "userLogin",
           });
         } catch (err) {
           this.error = err.response.data.error;

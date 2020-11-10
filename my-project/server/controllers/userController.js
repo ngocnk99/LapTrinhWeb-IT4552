@@ -39,6 +39,7 @@ module.exports = {
 
     async login(req, res) {
         try {
+            console.log('login', req.body)
             const { email, password } = req.body;
             const user = await User.findOne({ email: email })
             if (!user) {
@@ -46,30 +47,28 @@ module.exports = {
                 return res.status(403).send({
                     error: 'The login information was incorrect'
                 })
+            } else {
+                user.comparePassword(password, function(err, isMatch) {
+                    if (err) throw err;
+                    console.log(isMatch);
+                    if (!isMatch) {
+                        console.log('sai mat khau');
+                        return res.status(403).send({
+                            error: 'Wrong password2'
+                        })
+                    } else {
+                        const userJson = user.toJSON()
+                        res.send({
+                            user: userJson,
+                            token: jwtSignUser(userJson)
+                        })
+                        console.log({
+                            user: userJson,
+                            token: jwtSignUser(userJson)
+                        })
+                    }
+                });
             }
-
-            user.comparePassword(password, function(err, isMatch) {
-                if (err) throw err;
-                console.log(isMatch);
-                if (!isMatch) {
-                    console.log('sai mat khau');
-                    return res.status(403).send({
-                        error: 'Wrong password'
-                    })
-                }
-            });
-
-
-            const userJson = user.toJSON()
-            res.send({
-                user: userJson,
-                token: jwtSignUser(userJson)
-            })
-            console.log({
-                user: userJson,
-                token: jwtSignUser(userJson)
-            })
-
 
 
         } catch (err) {

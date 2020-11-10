@@ -16,10 +16,7 @@
       >
         Login
       </v-btn>
-      <v-btn
-        v-if="$store.state.isUserLoggedIn"
-        @click="navigateTo({ name: 'userLogin' })"
-      >
+      <v-btn v-if="$store.state.isUserLoggedIn" @click="logout">
         Log out
       </v-btn>
     </div>
@@ -36,6 +33,13 @@ export default {
   methods: {
     navigateTo(route) {
       this.$router.push(route);
+    },
+    logout() {
+      this.$store.dispatch("setToken", null);
+      this.$store.dispatch("setUser", null);
+      this.$router.push({
+        name: "home",
+      });
     },
   },
 };

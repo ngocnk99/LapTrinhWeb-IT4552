@@ -6,7 +6,6 @@ class UserAuthenticationService {
     static register(credentials) {
         return Api().post('register', credentials)
     }
-
     static login(credentials) {
         return Api().post('login', credentials)
     }

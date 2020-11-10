@@ -8,16 +8,6 @@ const router = express.Router();
 
 router.get('/', userController.getAllUser)
 
-//Get profile
-router.get('/:id/profile', (req, res, next) => {
-    console.log(req.params.id)
-    User.findOne({ _id: req.params.id })
-        .then(User => {
-            res.json(User)
-        })
-        .catch(error => next(error))
-
-})
 
 //Singup
 router.post('/register', userControllerPolicy.register, userController.register)

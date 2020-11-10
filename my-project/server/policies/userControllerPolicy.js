@@ -25,7 +25,7 @@ module.exports = {
                         <br>
                         1. It must contain ONLY the following characters: lower case, upper case, numerics.
                         <br>
-                        2. It must be at least 8 characters in length and not greater than 32 characters in length.
+                        2. It must be at least 6 characters in length and not greater than 32 characters in length.
                         `
                     })
                     break

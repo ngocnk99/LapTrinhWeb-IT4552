@@ -1,2 +1,7 @@
-vuex vuex-router-sync
-jwt gui token
+clinent:
+    vuex vuex-router-sync : router, config
+    axios: nhan gui du lieu toi server
+server:
+    joi: kiem tra  password
+    bcrpyt : ma hoa password (hash)
+    jsonwebtoken(jwt) : gui token toi client
