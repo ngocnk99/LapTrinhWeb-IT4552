@@ -1,11 +1,27 @@
 <template>
   <div class="fixed header">
     <div class="rightmenu">
-      <div class="logo" @click="navigateTo({ name: 'home' })">logo</div>
+      <v-btn class="logo" @click="navigateTo({ name: 'home' })">Home</v-btn>
     </div>
     <div class="leftmenu">
-      <v-btn @click="navigateTo({ name: 'userRegister' })"> Register </v-btn>
-      <v-btn @click="navigateTo({ name: 'userLogin' })"> Login </v-btn>
+      <v-btn
+        v-if="!$store.state.isUserLoggedIn"
+        @click="navigateTo({ name: 'userRegister' })"
+      >
+        Register
+      </v-btn>
+      <v-btn
+        v-if="!$store.state.isUserLoggedIn"
+        @click="navigateTo({ name: 'userLogin' })"
+      >
+        Login
+      </v-btn>
+      <v-btn
+        v-if="$store.state.isUserLoggedIn"
+        @click="navigateTo({ name: 'userLogin' })"
+      >
+        Log out
+      </v-btn>
     </div>
   </div>
 </template>

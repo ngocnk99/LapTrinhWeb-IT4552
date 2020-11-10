@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form autocomplete="on">
     <v-container>
       <v-row>
         <v-col cols="12" sm="6" class="m-auto">
@@ -47,14 +47,16 @@ export default {
   },
   methods: {
     async login() {
-      // try {
-      //   const response = await UserAuthenticationService.register({
-      //     email: this.email,
-      //     password: this.password,
-      //   });
-      // } catch (err) {
-      //   this.error = err.response.data.error;
-      // }
+      try {
+        const response = await UserAuthenticationService.login({
+          email: this.email,
+          password: this.password,
+        });
+        this.$store.dispatch("setToken", response.data.token);
+        this.$store.dispatch("setUser", response.data.user);
+      } catch (err) {
+        this.error = err.response.data.error;
+      }
     },
   },
 };

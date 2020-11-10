@@ -11,9 +11,12 @@
     "license": "ISC",
     "dependencies": {
         "async": "^3.2.0",
+        "bcrypt": "^5.0.0",
+        "bluebird": "^3.7.2",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "joi": "^10.6.0",
+        "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.10.13",
         "morgan": "^1.10.0",
         "nodemon": "^2.0.6"

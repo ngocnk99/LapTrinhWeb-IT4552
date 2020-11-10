@@ -23,11 +23,7 @@ router.get('/:id/profile', (req, res, next) => {
 router.post('/register', userControllerPolicy.register, userController.register)
 
 //signin
-router.get('/signin', (req, res) => {
-    console.log(req.params.id)
-    Post.deleteOne({ _id: req.params.id })
-        .then(() => res.status(200).redirect('/post'));
-})
+router.post('/login', userController.login)
 
 
 module.exports = router;

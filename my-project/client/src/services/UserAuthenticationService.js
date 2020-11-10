@@ -7,6 +7,9 @@ class UserAuthenticationService {
         return Api().post('register', credentials)
     }
 
+    static login(credentials) {
+        return Api().post('login', credentials)
+    }
 }
 
 export default UserAuthenticationService;
