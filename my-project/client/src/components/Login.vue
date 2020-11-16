@@ -3,24 +3,40 @@
     <v-container>
       <v-row>
         <v-col cols="12" sm="6" class="m-auto">
-          <h1>Login</h1>
-          <div class="register">
-            <v-text-field
-              v-model="email"
-              label="Email"
-              type="email"
-              name="email"
-              placeholder="Your Email"
-            ></v-text-field>
+          <panel title="Login"> </panel>
+          <div class="login">
+            <div class="email">
+              <v-text-field
+                v-model="email"
+                label="Email"
+                type="email"
+                name="email"
+                placeholder="Your Email"
+              ></v-text-field>
+            </div>
             <br />
-            <v-text-field
-              v-model="password"
-              type="password"
-              name="password"
-              placeholder="Password"
-              label="Password"
-              hint="At least 6 characters"
-            ></v-text-field>
+            <div class="password">
+              <v-text-field
+                v-model="password"
+                :type="show ? 'text' : 'password'"
+                name="password"
+                placeholder="Password"
+                label="Password"
+                hint="At least 6 characters"
+              ></v-text-field>
+              <font-awesome-icon
+                v-if="!show"
+                class="icon"
+                :icon="myIcon2"
+                @click="show = !show"
+              />
+              <font-awesome-icon
+                v-if="show"
+                class="icon"
+                :icon="myIcon1"
+                @click="show = !show"
+              />
+            </div>
             <br />
             <v-btn @click="login">Login!!</v-btn>
           </div>
@@ -35,14 +51,19 @@
 <script>
 /* eslint-disable */
 import UserAuthenticationService from "@/services/UserAuthenticationService";
+import Panel from "@/components/Panel.vue";
+import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 export default {
-  name: "Register",
+  name: "Login",
   data() {
     return {
       email: "",
       password: "",
       confirm_password: "",
       error: "",
+      show: false,
+      myIcon1: faEyeSlash,
+      myIcon2: faEye,
     };
   },
   methods: {
@@ -62,12 +83,15 @@ export default {
       }
     },
   },
+  components: {
+    Panel,
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.register {
+.login {
   padding: 10px 10px;
   border: 1px solid gray;
   border-radius: 5px;
@@ -77,5 +101,14 @@ export default {
 }
 .error {
   color: red;
+}
+
+.password {
+  position: relative;
+}
+.icon {
+  position: absolute;
+  top: 32%;
+  right: 6px;
 }
 </style>

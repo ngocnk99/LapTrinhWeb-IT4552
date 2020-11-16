@@ -16,6 +16,12 @@
       >
         Login
       </v-btn>
+      <v-btn
+        v-if="$store.state.isUserLoggedIn"
+        @click="navigateTo({ name: 'song' })"
+      >
+        Song
+      </v-btn>
       <v-btn v-if="$store.state.isUserLoggedIn" @click="logout">
         Log out
       </v-btn>
