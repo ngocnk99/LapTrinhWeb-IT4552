@@ -6,6 +6,7 @@ import Postcomponent from '@/components/Postcomponent'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
 import Song from '@/components/song'
+import CreateSong from '@/components/CreateSong'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
             path: '/user/song',
             name: 'song',
             component: Song
+        },
+        {
+            path: '/user/song/create',
+            name: 'songs-create',
+            component: CreateSong
         }
     ]
 })

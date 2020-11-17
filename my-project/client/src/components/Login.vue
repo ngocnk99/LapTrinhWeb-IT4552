@@ -24,18 +24,25 @@
                 label="Password"
                 hint="At least 6 characters"
               ></v-text-field>
-              <font-awesome-icon
+              <!-- <font-awesome-icon
                 v-if="!show"
                 class="icon"
                 :icon="myIcon2"
                 @click="show = !show"
               />
+            
               <font-awesome-icon
                 v-if="show"
                 class="icon"
                 :icon="myIcon1"
                 @click="show = !show"
-              />
+              /> -->
+              <i
+                class="fas fa-eye-slash icon"
+                v-if="show"
+                @click="show = !show"
+              ></i>
+              <i class="fas fa-eye icon" v-if="!show" @click="show = !show"></i>
             </div>
             <br />
             <v-btn @click="login">Login!!</v-btn>
@@ -52,7 +59,6 @@
 /* eslint-disable */
 import UserAuthenticationService from "@/services/UserAuthenticationService";
 import Panel from "@/components/Panel.vue";
-import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 export default {
   name: "Login",
   data() {
@@ -62,8 +68,6 @@ export default {
       confirm_password: "",
       error: "",
       show: false,
-      myIcon1: faEyeSlash,
-      myIcon2: faEye,
     };
   },
   methods: {

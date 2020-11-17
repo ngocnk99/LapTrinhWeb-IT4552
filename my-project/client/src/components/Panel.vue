@@ -1,7 +1,8 @@
 <template>
   <div class="panel">
     <h1>{{ title }}</h1>
-    <!-- <slot name="bye">No slot</slot> -->
+    <slot></slot>
+    <slot name="action"></slot>
   </div>
 </template>
  

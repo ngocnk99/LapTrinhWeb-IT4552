@@ -26,9 +26,9 @@ class PostService {
             })
         }
         // Create post
-    static insertPost(text) {
+    static insertPost(song) {
         return axios.post(url, {
-            text
+            song
         })
     }
 

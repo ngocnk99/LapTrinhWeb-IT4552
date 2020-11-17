@@ -3,8 +3,6 @@
     <v-container>
       <v-row>
         <v-col cols="12" sm="6" class="m-auto">
-          <panel title="Register"> </panel>
-
           <div class="register">
             <div class="abc">
               <v-text-field
@@ -26,18 +24,16 @@
                 label="Password"
                 hint="At least 6 characters"
               ></v-text-field>
-              <font-awesome-icon
+              <i
                 v-if="!show2"
-                class="icon"
-                :icon="myIcon2"
+                class="fas fa-eye icon"
                 @click="show2 = !show2"
-              />
-              <font-awesome-icon
+              ></i>
+              <i
                 v-if="show2"
-                class="icon"
-                :icon="myIcon1"
+                class="fas fa-eye-slash icon"
                 @click="show2 = !show2"
-              />
+              ></i>
             </div>
             <br />
             <div class="password">
@@ -49,18 +45,16 @@
                 label="Password"
                 hint="At least 6 characters"
               ></v-text-field>
-              <font-awesome-icon
+              <i
                 v-if="!show1"
-                class="icon"
-                :icon="myIcon2"
+                class="fas fa-eye icon"
                 @click="show1 = !show1"
-              />
-              <font-awesome-icon
+              ></i>
+              <i
                 v-if="show1"
-                class="icon"
-                :icon="myIcon1"
+                class="fas fa-eye-slash icon"
                 @click="show1 = !show1"
-              />
+              ></i>
             </div>
             <v-btn @click="register">Register!!</v-btn>
           </div>
@@ -76,7 +70,6 @@
 /* eslint-disable */
 import UserAuthenticationService from "@/services/UserAuthenticationService";
 import Panel from "@/components/Panel.vue";
-import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 export default {
   name: "Register",
   data() {
@@ -87,8 +80,6 @@ export default {
       error: "",
       show1: false,
       show2: false,
-      myIcon1: faEyeSlash,
-      myIcon2: faEye,
     };
   },
   methods: {

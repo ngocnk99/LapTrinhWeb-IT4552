@@ -3,7 +3,7 @@ const Post = require('../database/models/Post');
 module.exports = {
     async createPost(req, res) {
         try {
-            const post = new Post(req.body);
+            const post = new Post(req.body.song);
             await post.save();
             console.log('ok')
             res.status(201).send();

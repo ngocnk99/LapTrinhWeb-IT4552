@@ -1,3 +1,4 @@
+end part 4
 clinent:
     vuex vuex-router-sync : router, config
     axios: nhan gui du lieu toi server

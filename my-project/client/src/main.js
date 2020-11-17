@@ -8,11 +8,9 @@ import { sync } from 'vuex-router-sync'
 import store from './store/store'
 import Vueitfy from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 
 Vue.use(Vueitfy);
-Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 sync(store, router)
 new Vue({
