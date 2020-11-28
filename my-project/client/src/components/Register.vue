@@ -1,132 +1,150 @@
 <template>
-  <v-form>
-    <v-container>
-      <v-row>
-        <v-col cols="12" sm="6" class="m-auto">
-          <div class="register">
-            <div class="abc">
-              <v-text-field
-                v-model="email"
-                label="Email"
-                type="email"
-                name="email"
-                placeholder="Your Email"
-              >
-              </v-text-field>
-            </div>
-            <br />
-            <div class="password">
-              <v-text-field
-                v-model="password"
-                :type="show2 ? 'text' : 'password'"
-                name="password"
-                placeholder="Password"
-                label="Password"
-                hint="At least 6 characters"
-              ></v-text-field>
-              <i
-                v-if="!show2"
-                class="fas fa-eye icon"
-                @click="show2 = !show2"
-              ></i>
-              <i
-                v-if="show2"
-                class="fas fa-eye-slash icon"
-                @click="show2 = !show2"
-              ></i>
-            </div>
-            <br />
-            <div class="password">
-              <v-text-field
-                v-model="confirm_password"
-                :type="show1 ? 'text' : 'password'"
-                name="password"
-                placeholder="Confrim Password"
-                label="Password"
-                hint="At least 6 characters"
-              ></v-text-field>
-              <i
-                v-if="!show1"
-                class="fas fa-eye icon"
-                @click="show1 = !show1"
-              ></i>
-              <i
-                v-if="show1"
-                class="fas fa-eye-slash icon"
-                @click="show1 = !show1"
-              ></i>
-            </div>
-            <v-btn @click="register">Register!!</v-btn>
+  <div class="col-md-12">
+    <div class="card card-container">
+      <img
+        id="profile-img"
+        src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+        class="profile-img-card"
+      />
+      <form name="form" @submit.prevent="handleRegister">
+        <div v-if="!successful">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              v-model="user.username"
+              v-validate="'required|min:3|max:20'"
+              type="text"
+              class="form-control"
+              name="username"
+            />
+            <div
+              v-if="submitted && errors.has('username')"
+              class="alert-danger"
+            >{{errors.first('username')}}</div>
           </div>
-          <br />
-          <div class="error" v-html="error" />
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              v-model="user.email"
+              v-validate="'required|email|max:50'"
+              type="email"
+              class="form-control"
+              name="email"
+            />
+            <div
+              v-if="submitted && errors.has('email')"
+              class="alert-danger"
+            >{{errors.first('email')}}</div>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              v-model="user.password"
+              v-validate="'required|min:6|max:40'"
+              type="password"
+              class="form-control"
+              name="password"
+            />
+            <div
+              v-if="submitted && errors.has('password')"
+              class="alert-danger"
+            >{{errors.first('password')}}</div>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary btn-block">Sign Up</button>
+          </div>
+        </div>
+      </form>
+
+      <div
+        v-if="message"
+        class="alert"
+        :class="successful ? 'alert-success' : 'alert-danger'"
+      >{{message}}</div>
+    </div>
+  </div>
 </template>
 
 <script>
-/* eslint-disable */
-import UserAuthenticationService from "@/services/UserAuthenticationService";
-import Panel from "@/components/Panel.vue";
+import User from '../models/user';
+
 export default {
-  name: "Register",
+  name: 'Register',
   data() {
     return {
-      email: "",
-      password: "",
-      confirm_password: "",
-      error: "",
-      show1: false,
-      show2: false,
+      user: new User('', '', ''),
+      submitted: false,
+      successful: false,
+      message: ''
     };
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  mounted() {
+    if (this.loggedIn) {
+      this.$router.push('/profile');
+    }
+  },
   methods: {
-    async register() {
-      if (this.password != this.confirm_password) {
-        this.error = "Password verification is incorrect";
-      } else {
-        try {
-          const response = await UserAuthenticationService.register({
-            email: this.email,
-            password: this.password,
-          });
-          this.$router.push({
-            name: "userLogin",
-          });
-        } catch (err) {
-          this.error = err.response.data.error;
+    handleRegister() {
+      this.message = '';
+      this.submitted = true;
+      this.$validator.validate().then(isValid => {
+        if (isValid) {
+          this.$store.dispatch('auth/register', this.user).then(
+            data => {
+              this.message = data.message;
+              this.successful = true;
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+              this.successful = false;
+            }
+          );
         }
-      }
-    },
-  },
-  components: {
-    Panel,
-  },
+      });
+    }
+  }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.register {
-  padding: 10px 10px;
-  border: 1px solid gray;
-  border-radius: 5px;
+label {
+  display: block;
+  margin-top: 10px;
 }
-.m-auto {
-  margin: auto;
+
+.card-container.card {
+  max-width: 350px !important;
+  padding: 40px 40px;
 }
-.error {
-  color: red;
+
+.card {
+  background-color: #f7f7f7;
+  padding: 20px 25px 30px;
+  margin: 0 auto 25px;
+  margin-top: 50px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 }
-.password,
-.confirm_password {
-  position: relative;
-}
-.icon {
-  position: absolute;
-  top: 32%;
-  right: 6px;
+
+.profile-img-card {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 10px;
+  display: block;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
 }
 </style>

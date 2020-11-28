@@ -6,10 +6,14 @@ const router = express.Router();
 
 
 
-//Get Posts
+//Get All Posts
 router.get('/', postController.getAllPost)
 
-//Add Post
+//Get one Posts
+router.get('/:songId', postController.getOnePost)
+    //Edit Posts
+router.put('/:songId', postController.editPost)
+    //Add Post
 router.post('/', postController.createPost)
 
 
