@@ -1,5 +1,6 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import employerHeader from './employer-header';
 
 const API_URL = 'http://localhost:8082/api/test/';
 
@@ -12,8 +13,8 @@ class UserService {
         return axios.get(API_URL + 'user', { headers: authHeader() });
     }
 
-    getModeratorBoard() {
-        return axios.get(API_URL + 'mod', { headers: authHeader() });
+    getEmployerBoard() {
+        return axios.get(API_URL + 'mod', { headers: employerHeader() });
     }
 
     getAdminBoard() {

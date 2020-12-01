@@ -41,6 +41,7 @@ app.get("/", (req, res) => {
 
 // routes
 require("./app/routes/auth.routes")(app);
+require("./app/routes/employ.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/post.routes")(app);
 
@@ -64,13 +65,13 @@ function initial() {
             });
 
             new Role({
-                name: "moderator"
+                name: "employer"
             }).save(err => {
                 if (err) {
                     console.log("error", err);
                 }
 
-                console.log("added 'moderator' to roles collection");
+                console.log("added 'employer' to roles collection");
             });
 
             new Role({

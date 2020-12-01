@@ -9,10 +9,10 @@
       <form name="form" @submit.prevent="handleRegister">
         <div v-if="!successful">
           <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username">Employername</label>
             <input
               v-model="user.username"
-              v-validate="'required|min:8|max:20'"
+              v-validate="'required|min:6|max:20'"
               type="text"
               class="form-control"
               name="username"
@@ -56,6 +56,12 @@
           <div class="form-group">
             <button class="btn btn-primary btn-block">Sign Up</button>
           </div>
+          <router-link to="/employer/login" class="nav-link">
+            Sign In
+          </router-link>
+          <router-link to="/user/register" class="nav-link">
+            Are you jobker ?
+          </router-link>
         </div>
       </form>
 
@@ -71,13 +77,13 @@
 </template>
 
 <script>
-import User from '../models/user';
+import Employer from '@/models/employer';
 
 export default {
   name: 'Register',
   data() {
     return {
-      user: new User('', '', ''),
+      user: new Employer('', '', ''),
       submitted: false,
       successful: false,
       message: '',
@@ -85,12 +91,12 @@ export default {
   },
   computed: {
     loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
+      return this.$store.state.employ.status.loggedIn;
     },
   },
   mounted() {
     if (this.loggedIn) {
-      this.$router.push('/profile');
+      this.$router.push('/employer/profile');
     }
   },
   methods: {
@@ -99,7 +105,7 @@ export default {
       this.submitted = true;
       this.$validator.validate().then((isValid) => {
         if (isValid) {
-          this.$store.dispatch('auth/register', this.user).then(
+          this.$store.dispatch('employ/register', this.user).then(
             (data) => {
               this.message = data.message;
               this.successful = true;

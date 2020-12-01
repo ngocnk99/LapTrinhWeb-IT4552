@@ -1,8 +1,16 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/components/Home.vue';
-import Login from '@/components/Login.vue';
-import Register from '@/components/Register.vue';
+
+//user
+import UserLogin from '@/components/User/Login.vue';
+import UserRegister from '@/components/User/Register.vue';
+
+//employer
+import EmployerLogin from '@/components/Employer/Login.vue'
+import EmployerRegister from '@/components/Employer/Register.vue'
+
+//post
 import Postcomponent from '@/components/Postcomponent'
 import Post from '@/components/Posts/Index'
 import CreatePost from '@/components/CreatePost'
@@ -23,19 +31,38 @@ export const router = new Router({
             component: Home
         },
         {
-            path: '/login',
-            component: Login
+            path: '/user/login',
+            name: 'userLogin',
+            component: UserLogin
         },
         {
-            path: '/register',
-            component: Register
+            path: '/user/register',
+            name: 'userRegister',
+            component: UserRegister
         },
         {
-            path: '/profile',
+            path: '/user/profile',
             name: 'profile',
             // lazy-loaded
             component: () =>
-                import ('./components/Profile.vue')
+                import ('./components/User/Profile.vue')
+        },
+        {
+            path: '/employer/login',
+            name: 'employerLogin',
+            component: EmployerLogin
+        },
+        {
+            path: '/employer/register',
+            name: 'employerRegister',
+            component: EmployerRegister
+        },
+        {
+            path: '/employer/profile',
+            name: 'profile',
+            // lazy-loaded
+            component: () =>
+                import ('./components/Employer/Profile.vue')
         },
         {
             path: '/admin',
