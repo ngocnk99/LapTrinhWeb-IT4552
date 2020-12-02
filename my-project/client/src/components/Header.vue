@@ -1,7 +1,9 @@
 <template>
   <div class="fixed header">
     <div class="rightmenu">
-      <v-btn class="logo" @click="navigateTo({ name: 'home' })">Home</v-btn>
+      <router-link class="logo" tag="div" :to="{ name: 'home' }"
+        >Home</router-link
+      >
     </div>
     <div class="leftmenu">
       <v-btn
@@ -16,6 +18,13 @@
       >
         Login
       </v-btn>
+      <v-btn
+        v-if="$store.state.isUserLoggedIn"
+        @click="navigateTo({ name: 'posts' })"
+      >
+        Post
+      </v-btn>
+
       <v-btn v-if="$store.state.isUserLoggedIn" @click="logout">
         Log out
       </v-btn>
@@ -24,10 +33,10 @@
 </template>
 <script>
 export default {
-  name: "Header",
+  name: 'Header',
   data() {
     return {
-      msg: "Welcome to Your Vue.js App",
+      msg: 'Welcome to Your Vue.js App',
     };
   },
   methods: {
@@ -35,10 +44,10 @@ export default {
       this.$router.push(route);
     },
     logout() {
-      this.$store.dispatch("setToken", null);
-      this.$store.dispatch("setUser", null);
+      this.$store.dispatch('setToken', null);
+      this.$store.dispatch('setUser', null);
       this.$router.push({
-        name: "home",
+        name: 'home',
       });
     },
   },

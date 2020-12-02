@@ -3,16 +3,7 @@
     <h1>Latest Posts</h1>
     <!---CREATE POST HERE --->
     <hr />
-    <div class="create-post">
-      <input
-        type="text"
-        name=""
-        id="create-post"
-        v-model="text"
-        placeholder="Create a Post"
-      />
-      <button @click="createPost">Create!!</button>
-    </div>
+
     <hr />
     <div class="posts-container">
       <div
@@ -34,26 +25,22 @@
 
 <script>
 /* eslint-disable */
-import PostService from "../services/PostService";
+import PostService from '../services/PostService';
 export default {
-  name: "PostComponent",
+  name: 'PostComponent',
   data() {
     return {
       posts: [],
-      error: "",
-      text: "",
+      error: '',
+      text: '',
       info: null,
-      id: "a",
+      id: 'a',
     };
   },
   async created() {
     this.posts = await PostService.getPosts();
   },
   methods: {
-    async createPost() {
-      await PostService.insertPost(this.text);
-      this.posts = await PostService.getPosts();
-    },
     async deletePost(id) {
       await PostService.deletePost(id);
       this.posts = await PostService.getPosts();

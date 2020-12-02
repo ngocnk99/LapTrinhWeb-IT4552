@@ -1,30 +1,69 @@
-# client
+# Vue.js JWT Authentication with Vuex and Vue Router
 
-> A Vue.js project
+For more detail, please visit:
+> [Vue.js JWT Authentication with Vuex and Vue Router](https://bezkoder.com/jwt-vue-vuex-authentication/)
 
-## Build Setup
+> [Using Typescript](https://bezkoder.com/vuex-typescript-jwt-auth/)
 
-``` bash
-# install dependencies
-npm install
+Fullstack with Spring Boot Back-end:
+> [Spring Boot + Vue.js: Authentication with JWT & Spring Security Example](https://bezkoder.com/spring-boot-vue-js-authentication-jwt-spring-security/)
 
-# serve with hot reload at localhost:8080
-npm run dev
+Fullstack with Node.js Express Back-end:
+> [Node.js Express + Vue.js: JWT Authentication & Authorization example](https://bezkoder.com/node-express-vue-jwt-auth/)
 
-# build for production with minification
-npm run build
+Fullstack CRUD:
+> [Vue.js + Node.js + Express + MySQL example](https://bezkoder.com/vue-js-node-js-express-mysql-crud-example/)
 
-# build for production and view the bundle analyzer report
-npm run build --report
+> [Vue.js + Node.js + Express + PostgreSQL example](https://bezkoder.com/vue-node-express-postgresql/)
 
-# run unit tests
-npm run unit
+> [Vue.js + Node.js + Express + MongoDB example](https://bezkoder.com/vue-node-express-mongodb-mevn-crud/)
 
-# run e2e tests
-npm run e2e
+> [Vue.js + Spring Boot + MySQL/PostgreSQL example](https://bezkoder.com/spring-boot-vue-js-crud-example/)
 
-# run all tests
-npm test
+> [Vue.js + Spring Boot + MongoDB example](https://bezkoder.com/spring-boot-vue-mongodb/)
+
+> [Vue.js + Django example](https://bezkoder.com/django-vue-js-rest-framework/)
+
+## Note:
+Open `src/services/auth-header.js` and modify `return` statement for appropriate back-end.
+
+```js
+export default function authHeader() {
+  let user = JSON.parse(localStorage.getItem('user'));
+
+  if (user && user.accessToken) {
+    return { Authorization: 'Bearer ' + user.accessToken }; // for Spring Boot back-end
+    // return { 'x-access-token': user.accessToken };       // for Node.js Express back-end
+  } else {
+    return {};
+  }
+}
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

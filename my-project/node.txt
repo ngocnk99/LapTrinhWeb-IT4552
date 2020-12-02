@@ -1,6 +1,8 @@
+end part4
 clinent:
     vuex vuex-router-sync : router, config
     axios: nhan gui du lieu toi server
+    lodash : load-search
 server:
     joi: kiem tra  password
     bcrpyt : ma hoa password (hash)
