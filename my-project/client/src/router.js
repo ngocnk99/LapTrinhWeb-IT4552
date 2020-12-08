@@ -72,11 +72,11 @@ export const router = new Router({
                 import ('./components/BoardAdmin.vue')
         },
         {
-            path: '/mod',
-            name: 'moderator',
+            path: '/employer',
+            name: 'employer',
             // lazy-loaded
             component: () =>
-                import ('./components/BoardModerator.vue')
+                import ('./components/BoardEmployer.vue')
         },
         {
             path: '/user',

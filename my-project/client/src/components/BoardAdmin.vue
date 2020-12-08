@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <header class="jumbotron">
-      <h3>{{content}}</h3>
+      hello 123
+      <h3>{{ content }}</h3>
     </header>
   </div>
 </template>
@@ -13,21 +14,23 @@ export default {
   name: 'Admin',
   data() {
     return {
-      content: ''
+      content: '',
     };
   },
   mounted() {
     UserService.getAdminBoard().then(
-      response => {
+      (response) => {
         this.content = response.data;
       },
-      error => {
+      (error) => {
         this.content =
-          (error.response && error.response.data && error.response.data.message) ||
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
           error.message ||
           error.toString();
       }
     );
-  }
+  },
 };
 </script>
