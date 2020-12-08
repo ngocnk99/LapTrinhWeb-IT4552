@@ -50,9 +50,20 @@
             <span>Login</span>
           </button>
         </div>
-        <router-link to="/user/register" class="nav-link">
-          Sign Up
-        </router-link>
+        <div class="form__main-or">OR</div>
+        <div class="form__main-bot">
+          <div class="bot-btn">
+            <div class="facebook-btn" @click="signInWithFB">Facebook</div>
+            <div class="google-btn" @click="signInWithGG">Google</div>
+          </div>
+          <div style="margin-top: 10px">
+            Don't Have an Account?
+
+            <router-link to="/user/register" class="nav-link">
+              Sign Up Now
+            </router-link>
+          </div>
+        </div>
         <div class="form-group">
           <div>
             <router-link to="/employer/login" class="nav-link">
@@ -72,6 +83,7 @@
 
 <script>
 import User from '@/models/user';
+import firebase from 'firebase';
 export default {
   name: 'Login',
   data() {
@@ -118,6 +130,64 @@ export default {
         }
       });
     },
+    signInWithGG() {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          // The signed-in user info.
+          this.$store
+            .dispatch('auth/login', {
+              username: result.additionalUserInfo.profile.name,
+              password: result.additionalUserInfo.profile.email,
+            })
+            .then(
+              () => {
+                this.$router.push('/profile');
+              },
+              (error) => {
+                this.loading = false;
+                this.message =
+                  (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                  error.message ||
+                  error.toString();
+              }
+            );
+        })
+        .catch(function () {});
+    },
+    signInWithFB() {
+      var provider = new firebase.auth.FacebookAuthProvider();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then((result) => {
+          this.$store
+            .dispatch('auth/login', {
+              username: result.user.displayName,
+              password: result.user.email,
+            })
+            .then(
+              () => {
+                this.$router.push('/profile');
+              },
+              (error) => {
+                this.loading = false;
+                this.message =
+                  (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                  error.message ||
+                  error.toString();
+              }
+            );
+        })
+        .catch(function () {});
+    },
   },
 };
 </script>
@@ -154,5 +224,71 @@ label {
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+}
+.form__main-or {
+  text-align: center;
+  margin: 16px 0;
+  position: relative;
+}
+
+.form__main-or::after {
+  position: absolute;
+  width: 40%;
+  height: 1px;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 59%;
+  background: #beb7b7;
+}
+
+.form__main-or::before {
+  position: absolute;
+  width: 40%;
+  height: 1px;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  right: 59%;
+  background: #beb7b7;
+}
+
+.form__main-bot {
+  text-align: center;
+}
+
+.form__main-bot a {
+  color: black;
+}
+
+.form__main-bot a:hover {
+  color: #ff324d;
+}
+
+.form__main-bot .bot-btn {
+  display: flex;
+  justify-content: center;
+  color: white;
+}
+
+.form__main-bot .bot-btn .facebook-btn {
+  background-color: #3b5998;
+  margin-right: 16px;
+  width: 140px;
+  height: 45px;
+  line-height: 45px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.form__main-bot .bot-btn .google-btn {
+  background-color: #d85040;
+  width: 140px;
+  height: 45px;
+  line-height: 45px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>

@@ -50,12 +50,26 @@
             <span>Login</span>
           </button>
         </div>
-        <router-link to="/employer/register" class="nav-link">
-          Sign Up
-        </router-link>
-        <router-link to="/user/login" class="nav-link">
-          Are you jobker ?
-        </router-link>
+        <div class="form__main-or">OR</div>
+        <div class="form__main-bot">
+          <div class="bot-btn">
+            <div class="facebook-btn">Facebook</div>
+            <div class="google-btn">Google</div>
+          </div>
+          <div style="margin-top: 10px">
+            Don't Have an Account?
+            <router-link to="/employer/register" class="nav-link">
+              Sign Up Now
+            </router-link>
+          </div>
+        </div>
+        <div class="form-group">
+          <div>
+            <router-link to="/user/login" class="nav-link">
+              Are you jobker ?
+            </router-link>
+          </div>
+        </div>
         <div class="form-group">
           <div v-if="message" class="alert alert-danger" role="alert">
             {{ message }}
@@ -150,5 +164,71 @@ label {
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+}
+.form__main-or {
+  text-align: center;
+  margin: 16px 0;
+  position: relative;
+}
+
+.form__main-or::after {
+  position: absolute;
+  width: 40%;
+  height: 1px;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 59%;
+  background: #beb7b7;
+}
+
+.form__main-or::before {
+  position: absolute;
+  width: 40%;
+  height: 1px;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  right: 59%;
+  background: #beb7b7;
+}
+
+.form__main-bot {
+  text-align: center;
+}
+
+.form__main-bot a {
+  color: black;
+}
+
+.form__main-bot a:hover {
+  color: #ff324d;
+}
+
+.form__main-bot .bot-btn {
+  display: flex;
+  justify-content: center;
+  color: white;
+}
+
+.form__main-bot .bot-btn .facebook-btn {
+  background-color: #3b5998;
+  margin-right: 16px;
+  width: 140px;
+  height: 45px;
+  line-height: 45px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.form__main-bot .bot-btn .google-btn {
+  background-color: #d85040;
+  width: 140px;
+  height: 45px;
+  line-height: 45px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>
