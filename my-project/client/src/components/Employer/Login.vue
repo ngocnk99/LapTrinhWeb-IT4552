@@ -113,7 +113,7 @@ export default {
         if (this.user.username && this.user.password) {
           this.$store.dispatch('employ/login', this.user).then(
             () => {
-              this.$router.push('/employer/profile');
+              this.$router.push(`/employer/${this.user.username}`);
             },
             (error) => {
               this.loading = false;

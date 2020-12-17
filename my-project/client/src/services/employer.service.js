@@ -13,7 +13,6 @@ class EmployerService {
                 if (response.data.accessToken) {
                     localStorage.setItem('employer', JSON.stringify(response.data));
                 }
-
                 return response.data;
             });
     }
@@ -26,7 +25,29 @@ class EmployerService {
         return axios.post(API_URL + 'signup', {
             username: employer.username,
             email: employer.email,
-            password: employer.password
+            password: employer.password,
+            companyName: employer.companyName,
+            webLink: employer.webLink,
+            banner: employer.banner,
+            avatar: employer.avatar
+        });
+    }
+
+    getInfo(employerName) {
+        return axios.get(API_URL + `${employerName}`);
+    }
+
+    editInfo(employer) {
+        console.log('editinfo')
+        return axios.post(API_URL + `${employer.username}/edit`, employer);
+    }
+
+    search(search) {
+        console.log(search);
+        return axios.get(API_URL + `search`, {
+            params: {
+                keyword: search
+            }
         });
     }
 }

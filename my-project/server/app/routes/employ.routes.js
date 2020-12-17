@@ -19,4 +19,8 @@ module.exports = function(app) {
     );
 
     app.post("/api/employer/signin", controller.signin);
+    app.get("/api/employer/search", controller.search);
+    app.get("/api/employer/:employerName", controller.getInfo);
+    app.post("/api/employer/:employerName/edit", controller.editInfo);
+
 };

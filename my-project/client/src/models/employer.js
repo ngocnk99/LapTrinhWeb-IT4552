@@ -3,5 +3,13 @@ export default class Employer {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.companyName = '';
+        this.webLink = '';
+        this.address = '';
+        this.introduce = [];
+        this.banner = '';
+        this.avatar = '';
+        this.posts = [];
+        this.members = '';
     }
 }

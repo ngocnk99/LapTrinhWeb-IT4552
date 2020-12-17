@@ -9,12 +9,15 @@ import UserRegister from '@/components/User/Register.vue';
 //employer
 import EmployerLogin from '@/components/Employer/Login.vue'
 import EmployerRegister from '@/components/Employer/Register.vue'
+import EmployerIndex from '@/components/Employer/Index.vue'
+import EmployerSearch from '@/components/Employer/Search.vue'
+
 
 //post
 import Postcomponent from '@/components/Postcomponent'
 import Post from '@/components/Posts/Index'
-import CreatePost from '@/components/CreatePost'
-import EditPost from '@/components/EditPost'
+import CreatePost from '@/components/Posts/CreatePost'
+import EditPost from '@/components/Posts/EditPost'
 import ViewPost from '@/components/ViewPost/index'
 
 Vue.use(Router);
@@ -42,7 +45,7 @@ export const router = new Router({
         },
         {
             path: '/user/profile',
-            name: 'profile',
+            name: 'userProfile',
             // lazy-loaded
             component: () =>
                 import ('./components/User/Profile.vue')
@@ -58,8 +61,18 @@ export const router = new Router({
             component: EmployerRegister
         },
         {
-            path: '/employer/profile',
-            name: 'profile',
+            path: '/employer',
+            name: 'employerIndex',
+            component: EmployerIndex
+        },
+        {
+            path: '/employer/search',
+            name: 'employerSearch',
+            component: EmployerSearch
+        },
+        {
+            path: '/employer/:employerName',
+            name: 'employerProfile',
             // lazy-loaded
             component: () =>
                 import ('./components/Employer/Profile.vue')
@@ -76,14 +89,14 @@ export const router = new Router({
             name: 'employer',
             // lazy-loaded
             component: () =>
-                import ('./components/BoardEmployer.vue')
+                import ('./components/Employer/BoardEmployer.vue')
         },
         {
             path: '/user',
             name: 'user',
             // lazy-loaded
             component: () =>
-                import ('./components/BoardUser.vue')
+                import ('./components/User/BoardUser.vue')
         },
         {
             path: '/post',
