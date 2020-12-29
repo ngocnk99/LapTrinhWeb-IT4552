@@ -108,9 +108,17 @@ exports.signin = (req, res) => {
         });
 };
 
+exports.getAll = (req, res, next) => {
+    User.find({})
+        .limit(10)
+        .then(employers => {
+            res.json(employers)
+        })
+        .catch(error => next(error))
+};
+
 
 exports.getInfo = (req, res) => {
-    console.log(req.params.employerName)
     let employerName = req.params.employerName
     if (employerName) {
         User.findOne({ username: employerName })
@@ -135,6 +143,7 @@ exports.getInfo = (req, res) => {
                     avatar: user.avatar,
                     posts: user.posts,
                     members: user.members,
+                    notify: user.notify
                 });
             })
     }
@@ -150,7 +159,6 @@ exports.editInfo = (req, res) => {
             avatar: req.body.avatar,
             posts: req.body.posts,
             members: req.body.members,
-
         })
         .exec((err, user) => {
             if (err) {
@@ -165,9 +173,8 @@ exports.editInfo = (req, res) => {
 };
 
 exports.search = (req, res, next) => {
-    console.log('search');
-    const keyword = req.query.keyword
-    console.log(keyword)
+    const keyword = req.query.keyword;
+    console.log(keyword);
     if (keyword) {
         User.find({
                 companyName: { $regex: keyword, $options: "i" },

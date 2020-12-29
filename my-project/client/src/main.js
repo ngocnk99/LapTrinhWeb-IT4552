@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import { router } from './router';
+import AsyncComputed from 'vue-async-computed'
 import store from './store';
 import Vueitfy from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -40,6 +41,8 @@ firebase.initializeApp(firebaseConfig);
 Vue.use(VeeValidate);
 Vue.use(Vueitfy);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.use(AsyncComputed);
+
 
 Vue.use(Vuex);
 

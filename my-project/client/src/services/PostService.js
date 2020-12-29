@@ -25,28 +25,28 @@ class PostService {
             }
         })
     }
+    static getPostByEmployer(employerId) {
+        return axios.post(url + `/employer`, { employerId: employerId })
+    }
 
     static getOnePost(postId) {
             return axios.get(`${url}/${postId}`)
         }
         // Create post
     static insertPost(post) {
-        return axios.post(url, {
+        return axios.post(`${url}/creat`, {
             post
         })
     }
 
     static index(search) {
         return axios.get(url, {
-            params: {
-                search: search
-            }
+            params: search
         })
     }
 
     static editPost(post) {
-        console.log(post);
-        return axios.put(`${url}/${post._id}`, post)
+        return axios.post(`${url}/${post._id}/edit`, post)
     }
 
     // delete post

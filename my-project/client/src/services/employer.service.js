@@ -33,17 +33,18 @@ class EmployerService {
         });
     }
 
+    getAll() {
+        return axios.get(API_URL);
+    }
     getInfo(employerName) {
         return axios.get(API_URL + `${employerName}`);
     }
 
     editInfo(employer) {
-        console.log('editinfo')
         return axios.post(API_URL + `${employer.username}/edit`, employer);
     }
 
     search(search) {
-        console.log(search);
         return axios.get(API_URL + `search`, {
             params: {
                 keyword: search

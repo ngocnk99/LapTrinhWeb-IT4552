@@ -21,7 +21,7 @@ export default {
     };
   },
   async created() {
-    this.posts = await PostService.getPosts();
+    this.posts = (await PostService.getOnePost(this.$store.state.route.params.postId)).data;
   },
   methods: {
     async createPost() {

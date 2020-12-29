@@ -13,12 +13,15 @@ import EmployerIndex from '@/components/Employer/Index.vue'
 import EmployerSearch from '@/components/Employer/Search.vue'
 
 
-//post
-import Postcomponent from '@/components/Postcomponent'
-import Post from '@/components/Posts/Index'
+//Job
 import CreatePost from '@/components/Posts/CreatePost'
 import EditPost from '@/components/Posts/EditPost'
-import ViewPost from '@/components/ViewPost/index'
+import SearchJob from '@/components/ViewJob/SearchJob'
+import ViewJob from '@/components/ViewJob/index'
+
+//Admin
+import AdminLogin from '@/components/Admin/Login.vue'
+import Admin from '@/components/Admin/Index.vue'
 
 Vue.use(Router);
 
@@ -32,6 +35,14 @@ export const router = new Router({
         {
             path: '/home',
             component: Home
+        },
+        //user
+        {
+            path: '/user',
+            name: 'user',
+            // lazy-loaded
+            component: () =>
+                import ('./components/User/BoardUser.vue')
         },
         {
             path: '/user/login',
@@ -49,6 +60,14 @@ export const router = new Router({
             // lazy-loaded
             component: () =>
                 import ('./components/User/Profile.vue')
+        },
+        //employer
+        {
+            path: '/employer',
+            name: 'employer',
+            // lazy-loaded
+            component: () =>
+                import ('./components/Employer/BoardEmployer.vue')
         },
         {
             path: '/employer/login',
@@ -77,36 +96,11 @@ export const router = new Router({
             component: () =>
                 import ('./components/Employer/Profile.vue')
         },
+        //job
         {
-            path: '/admin',
-            name: 'admin',
-            // lazy-loaded
-            component: () =>
-                import ('./components/BoardAdmin.vue')
-        },
-        {
-            path: '/employer',
-            name: 'employer',
-            // lazy-loaded
-            component: () =>
-                import ('./components/Employer/BoardEmployer.vue')
-        },
-        {
-            path: '/user',
-            name: 'user',
-            // lazy-loaded
-            component: () =>
-                import ('./components/User/BoardUser.vue')
-        },
-        {
-            path: '/post',
-            name: 'post',
-            component: Postcomponent
-        },
-        {
-            path: '/user/post',
-            name: 'posts',
-            component: Post
+            path: '/job/search',
+            name: 'jobSearch',
+            component: SearchJob
         },
         {
             path: '/post/create',
@@ -114,14 +108,26 @@ export const router = new Router({
             component: CreatePost
         },
         {
-            path: '/post/:postId',
-            name: 'post',
-            component: ViewPost
+            path: '/job/:jobId',
+            name: 'ViewJob',
+            component: ViewJob
         },
         {
             path: '/post/:postId/edit',
             name: 'post-edit',
             component: EditPost
+        },
+        {
+            path: '/admin',
+            name: 'admin',
+            // lazy-loaded
+            component: Admin,
+        },
+        {
+            path: '/admin/login',
+            name: 'adminLogin',
+            // lazy-loaded
+            component: AdminLogin,
         },
     ]
 });

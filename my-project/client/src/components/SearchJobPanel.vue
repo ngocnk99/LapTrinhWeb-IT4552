@@ -2,44 +2,51 @@
   <div class="searchPanel">
     <div class="container">
       <div class="box-form-search">
-          <h3>Tra cứu thông tin <strong>công ty</strong> trên JOBS</h3>
           <div class="row">
-            <div class="col-sm-9">
+            <div class="col-sm-8">
               <div class="input-wrap">
                 <i class="fas fa-search "></i>
                 <div class="input-box">
-                  <input type="text" placeholder="Nhâp tên công ty" v-model="search">
+                  <input type="text" placeholder="Tên công việc,ngành nghê bạn muốn ứng tuyển" v-model="keyword">
                 </div>
                   <div class="listname" v-if="searchStatus">
                     <div
                       class="listname__item"
-                      v-for="(name, index) in employerNameList"
+                      v-for="(name, index) in keywordList"
                       :key="index"
                       @click="selectKeyWord"
                     >{{name}}</div>
                   </div>
               </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
+              <div class="input-wrap">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="input-box">
+                  <input type="text" placeholder="Tất cả địa điểm" v-model="address">
+                </div>
+              </div>
+            </div>  
+            <div class="col-sm-2">
               <div class="button button-primary" @click="goSearch"><i class="fas fa-search"></i> Tìm</div>
             </div>
-       
-        </div>
+           <h4>Tìm việc làm nhanh,uy tín, mới nhất trên <strong>JOBS</strong> </h4>
+          </div>
       </div>
     </div>
-      
   </div>
 </template>
  
 <script>
-import EmployerService from '@/services/employer.service';
+import PostService from '@/services/PostService';
 import _ from 'lodash';
 export default {
   name: 'PostsSearch',
   data() {
     return {
-      search: '',
-      employerNameList: [],
+      keyword: '',
+      address:'',
+      keywordList:[],
       searchStatus: false
     };
   },
@@ -55,34 +62,41 @@ export default {
       },
       selectKeyWord(){
           let target = event.target || event.srcElement;
-          this.search = target.innerHTML
+          this.keyword = target.innerHTML
       },
       goSearch(){
         const route = {
-          name: 'employerSearch'
+          name: 'jobSearch'
         };
-        if(this.search != this.$route.query.keyword){
-          route.query = {
-            keyword: this.search,
-          }
+        route.query = {}
+        if(this.keyword != this.$route.query.keyword){
+          route.query.keyword = this.keyword
+        }
+         if(this.address != this.$route.query.address){
+          route.query.address = this.address
         }
         this.$router.push(route);
       }
   },
 
   watch: {
-    search: _.debounce(async function () {
-        let listName = [];
-        if (this.search !== '') {
-          let reponseData = (await EmployerService.search(this.search)).data;
-          reponseData.forEach(element => {
-            listName.push(element.companyName)
+    keyword: _.debounce(async function () {
+
+        let list = []
+        if (this.keyword !== '') {
+          let reponseData = (await PostService.index({keyword: this.keyword})).data;
+          reponseData[0].forEach(element => {
+            list.push(element.title)
+           
+          });
+          reponseData[1].forEach(element => {
+            list.push(element.career)
           });
         }
-        this.employerNameList = this.removeDups(listName).slice(0,10);
+        this.keywordList = this.removeDups(list).slice(0,10);
      }, 500),
-    employerNameList() {
-      if(this.employerNameList.length != 0){
+    keywordList() {
+      if(this.keywordList.length != 0){
         this.searchStatus = true;
       }else{
         this.searchStatus = false;
@@ -94,14 +108,14 @@ export default {
 
  <style lang="scss" scoped>
   .searchPanel{
-    background: url("https://firebasestorage.googleapis.com/v0/b/laptrinhweb-4dbf0.appspot.com/o/employer%2Fsearch_company_bg.png?alt=media&token=bf452a9e-1a27-4ea6-b5f4-adcda6b29df1");
-    background-size: cover;
+    background-color:#212f3f ;
     .box-form-search{
       color:white;
       background-color: rgba(51,51,51,.6);
-      margin: 20px auto;
-      padding: 15px 20px;
-      @media (min-width: 768px){     width: 70%; } 
+      padding: 0px 20px;
+      .col-sm-8,.col-sm-2{
+        padding: 12px 4px;
+      }
       .input-wrap{
         background-color:white ;
         display: flex;
@@ -138,17 +152,20 @@ export default {
         }
         height: 40px;
       }
-        .button{
-          height: 40px;
-          line-height: 40px;
-          border-radius: 3px;
-          outline: none;
-          text-align: center;
-          cursor: pointer;
-          i{
-            color: white;
-          }
+      .button{
+        height: 40px;
+        line-height: 40px;
+        border-radius: 3px;
+        outline: none;
+        text-align: center;
+        cursor: pointer;
+        i{
+          color: white;
         }
+      }
+      h4{
+        padding-left:5px ;
+      }
     }
   }
 

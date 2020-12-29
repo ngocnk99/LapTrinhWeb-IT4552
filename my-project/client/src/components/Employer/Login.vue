@@ -98,7 +98,7 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/employer/profile');
+      this.$router.push(`/employer/${this.$store.state.employ.user.username}`);
     }
   },
   methods: {
@@ -114,6 +114,7 @@ export default {
           this.$store.dispatch('employ/login', this.user).then(
             () => {
               this.$router.push(`/employer/${this.user.username}`);
+              window.location.reload();
             },
             (error) => {
               this.loading = false;

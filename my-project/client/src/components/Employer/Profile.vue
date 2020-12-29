@@ -121,30 +121,24 @@
                  <div class="box box-white ">
                   <div
                     class="post-wrap"
-                    v-for="(info, index) in test"
-                    :item="info"
-                    :index="index"
-                    :key="info"
+                    v-for="(info, index) in posts"
+                    :key="index"
                   >
-                    <h5><a href=""> Nhân viên kinh doanh</a></h5>
+                    <h5><a href=""> {{info.title}}</a></h5>
                     <div class="row">
-                      <div class="col-md-3 col-sm-6 job-deadline job-meta-data text-dark-gray"><i class="fas fa-clock "></i>31/12/2020</div>
-                      <div class="col-md-3 col-sm-6 job-salary  job-meta-data text-dark-gray"><i class="fas fa-dollar-sign"></i>Thỏa thuận</div>
-                      <div class="col-md-3 col-sm-6 job-location  job-meta-data text-dark-gray"><i class="fas fa-map-marker-alt"></i>Hồ Chính Minh</div>
-                      <div class="col-md-3 col-sm-6 job-type  job-meta-data text-dark-gray"><i class="fas fa-briefcase"></i>Toàn thời gian</div>
+                      <div class="col-md-3 col-sm-6 job-deadline job-meta-data text-dark-gray"><i class="fas fa-clock "></i>{{info.dateline}}</div>
+                      <div class="col-md-3 col-sm-6 job-salary  job-meta-data text-dark-gray"><i class="fas fa-dollar-sign"></i>{{info.salary}}</div>
+                      <div class="col-md-3 col-sm-6 job-location  job-meta-data text-dark-gray"><i class="fas fa-map-marker-alt"></i>{{employer.address}}</div>
+                      <div class="col-md-3 col-sm-6 job-type  job-meta-data text-dark-gray"><i class="fas fa-briefcase"></i>{{info.formOfWork}}</div>
                     </div>
                     <span
                     class="post-job-wrap"
-                    v-for="(info, index) in test"
-                    :item="info"
-                    :index="index"
-                    :key="info"
                     >
-                      Tư vấn
+                      {{info.career}}
                     </span>
                   </div>
                   <div class="d-flex" v-if="editStatus">
-                    <div class="add-button "></div>                 
+                    <div class="add-button " @click="$router.push('/post/create');"></div>                 
                   </div>
                 </div>
              </div>
@@ -192,6 +186,7 @@
 <script>
 import firebase from 'firebase';
 import EmployerService from '@/services/employer.service';
+import PostService from '@/services/PostService';
 import Employer from '@/models/employer'
 import employerService from '@/services/employer.service';
 export default {
@@ -201,7 +196,7 @@ export default {
       editSuccesfull : false,
       editStatus: false,
       currentEmployer: false,
-      test:[1,2,3,4],
+      posts:[],
       employer: new Employer(),
       employerForEdit: null,
       message: '',
@@ -234,7 +229,6 @@ export default {
             error.response.data.message) ||
           error.message ||
           error.toString();
-           console.log(this.message)
       });
       this.employerForEdit = JSON.parse(JSON.stringify(this.employer)) 
       this.editSuccesfull = !this.editSuccesfull;
@@ -304,12 +298,12 @@ export default {
     }
   },
   mounted() {
-    if (!this.currentUser) {
-      this.$router.push('/employer/login');
+    if (this.$store.state.employ.user) {
+      if(this.$route.params.employerName == this.$store.state.employ.user.username){
+       this.currentEmployer = true;
+      }
     }
-    if(this.$route.params.employerName == this.$store.state.employ.user.username){
-      this.currentEmployer = true;
-    }
+   
     
   },
   async created() {
@@ -318,6 +312,7 @@ export default {
       (responseData) => {
         this.employer = responseData.data;
         this.employerForEdit = JSON.parse(JSON.stringify(this.employer)) 
+        return responseData.data.id
       },
       (error) => {
         this.searchStatus = false;
@@ -328,7 +323,13 @@ export default {
           error.message ||
           error.toString();
       }
-    );
+    ).then((employerId) => {
+      PostService.getPostByEmployer(employerId).then(
+        (responseData) => {
+          this.posts = responseData.data
+        }
+      );
+    });
   }
 };
 </script>
@@ -455,7 +456,7 @@ export default {
     }
   }
 
-    button{
+  button{
     width: 180px;
     margin-bottom: 10px;
     border-radius: 3px;

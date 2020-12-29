@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand ">
+    <nav class="navbar navbar-expand " v-if="!admin">
       <div class="container">
         <div class="navbar-nav ">
           <li class="nav-item">
@@ -12,7 +12,7 @@
             <router-link to="/admin" class="nav-link">Admin Board</router-link>
           </li>-->
           <li v-if="currentEmployer" class="nav-item">
-            <router-link to="/employer" class="nav-link"
+            <router-link to="/post/create" class="nav-link"
               >Đăng tuyển</router-link
             >
           </li>
@@ -38,12 +38,17 @@
         </div>
         <div v-else-if="currentEmployer" class="navbar-nav ">
           <li class="nav-item">
+            <router-link to="/employer" class="nav-link">
+              Công ty
+            </router-link>
+          </li>
+          <li class="nav-item">
             <div class="dropdown show">
-              <a class="btn  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               {{ currentEmployer.username }}
+              <a class="btn user  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <img :src="`${employer.avatar}`" alt="" style="width:40px;border-radius:50%;">
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <router-link :to="{ name: 'employerProfile', params: {employerName: currentEmployer.username } }" class="nav-link">
+                <router-link :to="{ name: 'employerProfile', params: {employerName: employer.username } }" class="nav-link">
                    Profile
                 </router-link>              
                 <a class="nav-link" href @click.prevent="logOut">
@@ -51,6 +56,18 @@
                 </a>
               </div>
             </div>          
+          </li>
+          <li class="notification nav-item">
+             <div class="dropdown show">
+               <a class="btn noti-btn  dropdown-toggle" href="#" role="button" id="dropdownNoti" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-bell "></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownNoti">
+                <div class="no-Noti" v-if="employer.notify == 0 ">
+                  Bạn không có thông báo nào
+                </div>
+              </div>
+             </div>
           </li>
         </div>
         <div v-else class="navbar-nav ">
@@ -79,7 +96,15 @@
 </template>
 
 <script>
+import EmployerService from '@/services/employer.service';
 export default {
+  data(){
+    return{
+      message:'',
+      jobkers:'',
+      employer:'',
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -87,9 +112,17 @@ export default {
     currentEmployer() {
       return this.$store.state.employ.user;
     },
+    admin(){
+      if(this.$route.name == 'adminLogin' ||  this.$route.name == 'admin')
+        {
+          return true;
+        }else{
+          return false;
+        }
+    }
   },
   methods: {
-    logOut() {
+    async logOut() {
       this.$store.dispatch('auth/logout');
       this.$store.dispatch('employ/logout');
       this.$router.push('/user/login');
@@ -99,6 +132,22 @@ export default {
       this.$router.push('/employer/login');
     }
   },
+  async created(){
+      if(this.currentEmployer){
+      EmployerService.getInfo(this.currentEmployer.username).then(
+      (responseData) => {    
+        this.employer = responseData.data;
+      },
+      (error) => {
+        this.message =
+         (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+      });
+      }
+  }
 };
 </script>
 
@@ -107,6 +156,12 @@ export default {
     background-color:#f6fbf9 !important;
     .navbar-nav{
       .nav-item{
+        .user{
+          &::after{
+            vertical-align: .1em!important;
+          }
+        }
+
         .nav-link{
           color: black;
           font-size: 1rem;
@@ -128,6 +183,24 @@ export default {
         }
         .btn{
           font-size: 1.25rem;
+          line-height: 2em;
+        }
+      }
+      .notification{
+        position: relative;
+        i{
+          color: black;
+          &:hover{
+            color: #00b14f;
+          }
+        }
+        .noti-btn{
+          &::after{
+            display: none!important;
+          }
+        }
+        .dropdown-menu{
+          left: -230%;
         }
       }
     }
@@ -218,7 +291,15 @@ export default {
     color: #d9534f;
   }
 
-
+  .bold{
+    font-weight: 700;
+  }
+  .text-highlight {
+    color: #00b14f;
+  }
+  .text-dark-gray {
+    color: #666;
+  }
   i{
     color: #00b14f;
     margin: 0 5px;

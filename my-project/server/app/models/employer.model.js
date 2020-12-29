@@ -32,6 +32,10 @@ const Employer = mongoose.model(
             type: String,
             default: '0 Nhân viên',
         },
+        notify: {
+            type: Number,
+            default: 0,
+        },
         roles: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role"

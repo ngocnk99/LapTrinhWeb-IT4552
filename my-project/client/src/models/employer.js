@@ -9,7 +9,7 @@ export default class Employer {
         this.introduce = [];
         this.banner = '';
         this.avatar = '';
-        this.posts = [];
+        this.posts = []; //id 
         this.members = '';
     }
 }
