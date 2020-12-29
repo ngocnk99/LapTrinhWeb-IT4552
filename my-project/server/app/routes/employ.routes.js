@@ -18,5 +18,10 @@ module.exports = function(app) {
         controller.signup
     );
 
+    app.get("/api/employer", controller.getAll);
     app.post("/api/employer/signin", controller.signin);
+    app.get("/api/employer/search", controller.search);
+    app.get("/api/employer/:employerName", controller.getInfo);
+    app.post("/api/employer/:employerName/edit", controller.editInfo);
+
 };

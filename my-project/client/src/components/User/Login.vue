@@ -8,6 +8,7 @@
       />
       <form name="form" @submit.prevent="handleLogin">
         <div class="form-group">
+          <br>
           <label for="username">Username</label>
           <input
             v-model="user.username"

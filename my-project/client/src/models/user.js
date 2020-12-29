@@ -3,5 +3,7 @@ export default class User {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.posts = [];
+        this.cv = '';
     }
 }

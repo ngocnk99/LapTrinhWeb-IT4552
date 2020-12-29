@@ -93,7 +93,7 @@ export default {
   name: 'Register',
   data() {
     return {
-      user: new Employer('', '', ''),
+      user: new Employer(),
       submitted: false,
       successful: false,
       message: '',

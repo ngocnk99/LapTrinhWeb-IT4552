@@ -5,9 +5,9 @@ const Role = db.role;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+const { employer } = require("../models");
 
 exports.signup = (req, res) => {
-    console.log("signup");
     const user = new User({
         username: req.body.username,
         email: req.body.email,
@@ -98,13 +98,6 @@ exports.signin = (req, res) => {
             for (let i = 0; i < user.roles.length; i++) {
                 authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
             }
-            console.log({
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                roles: authorities,
-                accessToken: token
-            })
             res.status(200).send({
                 id: user._id,
                 username: user.username,
@@ -113,4 +106,85 @@ exports.signin = (req, res) => {
                 accessToken: token
             });
         });
+};
+
+exports.getAll = (req, res, next) => {
+    User.find({})
+        .limit(10)
+        .then(employers => {
+            res.json(employers)
+        })
+        .catch(error => next(error))
+};
+
+
+exports.getInfo = (req, res) => {
+    let employerName = req.params.employerName
+    if (employerName) {
+        User.findOne({ username: employerName })
+            .exec((err, user) => {
+                if (err) {
+                    res.status(500).send({ message: err });
+                    return;
+                }
+                if (!user) {
+                    return res.status(404).send({ message: "Employer Not found." });
+                }
+
+                res.status(200).send({
+                    id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    companyName: user.companyName,
+                    webLink: user.webLink,
+                    address: user.address,
+                    introduce: user.introduce,
+                    banner: user.banner,
+                    avatar: user.avatar,
+                    posts: user.posts,
+                    members: user.members,
+                    notify: user.notify
+                });
+            })
+    }
+};
+
+exports.editInfo = (req, res) => {
+    User.updateOne({ username: req.params.employerName }, {
+            companyName: req.body.companyName,
+            webLink: req.body.webLink,
+            address: req.body.address,
+            introduce: req.body.introduce,
+            banner: req.body.banner,
+            avatar: req.body.avatar,
+            posts: req.body.posts,
+            members: req.body.members,
+        })
+        .exec((err, user) => {
+            if (err) {
+                res.status(500).send({ message: err });
+                return;
+            }
+            if (!user) {
+                return res.status(404).send({ message: "Cannot edit info" });
+            }
+            res.status(200).send({ message: "information is successfully edited" });
+        })
+};
+
+exports.search = (req, res, next) => {
+    const keyword = req.query.keyword;
+    console.log(keyword);
+    if (keyword) {
+        User.find({
+                companyName: { $regex: keyword, $options: "i" },
+                // title: { $regex: "", $options: "i" }
+            })
+            .then(employers => {
+                res.json(employers)
+            })
+            .catch(error => next(error))
+    } else {
+        res.json([]);
+    }
 };

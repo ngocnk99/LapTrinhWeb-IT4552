@@ -1,19 +1,18 @@
 <template>
-  <div class="container">
-    <header class="jumbotron">
-      <h3>{{content}}</h3>
-    </header>
+  <div class="company">
+  a
   </div>
 </template>
 
 <script>
-import UserService from '../services/user.service';
+import UserService from '@/services/user.service';
 
 export default {
   name: 'Moderator',
   data() {
     return {
-      content: ''
+      content: '',
+      editStatus: true,
     };
   },
   mounted() {
@@ -31,3 +30,26 @@ export default {
   }
 };
 </script>
+
+
+<style lang="scss" scoped>
+.input-setup {
+  font-family: 'Caveat', cursive;
+  border: none;
+  border-radius: 2px;
+  &::placeholder {
+    color: transparent;
+  } 
+}
+
+.show-placeholder {
+  &::placeholder {
+    color: #333333 !important;
+  }
+}
+
+.bc-none {
+  background-color: transparent;
+}
+
+</style>

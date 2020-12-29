@@ -1,58 +1,95 @@
 const db = require("../models");
 const Post = db.post;
+const Employer = db.employer;
 const { ObjectId } = require('mongodb');
 
 module.exports = {
     async createPost(req, res) {
-        console.log(req.body)
         try {
             const post = new Post(req.body.post);
-            await post.save();
-            console.log('ok')
+            await post.save(function(err, post) {
+                Employer.updateOne({ _id: req.body.post.employerId }, { "$push": { "posts": post.id } },
+                    function(err, raw) {
+                        if (err) return handleError(err);
+                        console.log('The raw response from Mongo was ', raw);
+                    })
+            });
             res.status(201).send();
         } catch (err) {
             res.status(400).send({
-                error: 'This email is already use'
+                error: 'Can not create post'
             })
-            console.log('creat err')
         }
     },
     getAllPost(req, res, next) {
-        const search = req.query.search
-        console.log(search)
+        const search = req.query.keyword
+        const address = req.query.address;
+        console.log(req.query)
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         if (search) {
-            Post.find({
-                    text: { $regex: search, $options: "i" },
-                    // title: { $regex: "", $options: "i" }
-                })
-                .limit(10)
-                .then(posts => {
-                    res.json(posts)
-                })
-                .catch(error => next(error))
+            if (!address) {
+                Post.find({
+                        'title': { $regex: search, $options: "i" }
+                    })
+                    .then(posts1 => {
+                        Post.find({
+                                'career': { $regex: search, $options: "i" }
+
+                            })
+                            .then(posts2 => {
+                                console.log([posts1, posts2])
+                                res.json([posts1, posts2])
+                            })
+                    })
+                    .catch(error => next(error))
+            } else {
+                Post.find({
+                        'title': { $regex: search, $options: "i" },
+                        'address': { $regex: address, $options: "i" }
+                    })
+                    .then(posts1 => {
+                        Post.find({
+                                'career': { $regex: search, $options: "i" },
+                                'address': { $regex: address, $options: "i" }
+
+                            })
+                            .then(posts2 => {
+                                console.log([posts1, posts2])
+                                res.json([posts1, posts2])
+                            })
+                    })
+                    .catch(error => next(error))
+            }
         } else {
             Post.find({})
-                .limit(10)
+                .limit(20)
                 .then(posts => {
                     res.json(posts)
                 })
                 .catch(error => next(error))
         }
     },
+    getPostByEmployer(req, res, next) {
+        Post.find({ employerId: req.body.employerId })
+            .then(posts => {
+                return res.json(posts);
+            })
+            .catch(error => next(error))
+    },
     getOnePost(req, res, next) {
-        Post.findById(ObjectId(req.params.postId))
+        Post.find(ObjectId(req.params.postId))
             .then(post => {
                 return res.json(post);
             })
             .catch(error => next(error))
     },
     editPost(req, res, next) {
-        console.log(req.body)
         Post.updateOne({ _id: req.params.postId }, req.body)
             .then(() => res.send(this.body))
-            .catch(error => console.log(error))
+            .catch(error => console.log('err edit'))
     },
     deletePost(req, res, next) {
+        Post.f
         console.log("delete");
         Post.deleteOne({ _id: req.params.id })
             .then(() => res.status(200).redirect('/post'));
