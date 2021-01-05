@@ -22,7 +22,7 @@
           <div class="box-main">
             <div class="row">
               <div
-                  class="col-lg-6  "
+                  class="col-lg-6"
                   v-for="(post, index) in posts"
                   :key="index"
               >
@@ -30,7 +30,7 @@
                     <div class="row ">
 
                       <div class="col-xs-4">
-                        <a href="#">
+                        <a :href="`/job/${post._id}`">
                           <img :src="`${post.avatar}`" alt="">
                         </a> 
                       </div>
@@ -83,7 +83,9 @@ export default {
     SearchJobPanel,
   },
   async created() {
-    this.posts = await PostService.getPosts();
+    let posts = await PostService.getPosts();
+    posts = posts.filter(post => post.status.status == 1);
+    this.posts = posts.slice(0, 19);
   }
 };
 </script>
@@ -117,6 +119,7 @@ export default {
       padding: 0 12px;
       .job-wrap{
         padding: 5px 18px;
+        height: 100%;
         border: 1px solid rgb(214, 209, 209);
       }
       .jobInfo-wrap{

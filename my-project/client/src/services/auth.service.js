@@ -29,6 +29,31 @@ class AuthService {
             password: user.password
         });
     }
+
+    getInfo(userName) {
+        return axios.get(API_URL + `${userName}`);
+    }
+
+    editInfo(user) {
+        return axios.post(API_URL + `${user.username}/edit`, user);
+    }
+
+    apply(username, postId) {
+        return axios.post(API_URL + `${username}/apply`, { postId: postId });
+    }
+
+    watchNotifyApply(username, postId) {
+        return axios.post(API_URL + `${username}/watchNotifyApply`, { postId: postId });
+    }
+
+    accesApply(username, postId) {
+        return axios.post(API_URL + `${username}/accesApply`, { postId: postId });
+    }
+
+    refuseApply(username, postId) {
+        return axios.post(API_URL + `${username}/refuseApply`, { postId: postId });
+    }
+
 }
 
 export default new AuthService();

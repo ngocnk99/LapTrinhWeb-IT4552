@@ -116,7 +116,7 @@ export default {
     EmployerSearchPanel,
   },
   async created(){
-    console.log(this.$route);
+   
     this.employers = (await EmployerService.search(this.$route.query.keyword)).data;
   }
 };

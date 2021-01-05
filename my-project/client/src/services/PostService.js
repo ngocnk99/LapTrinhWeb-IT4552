@@ -28,6 +28,9 @@ class PostService {
     static getPostByEmployer(employerId) {
         return axios.post(url + `/employer`, { employerId: employerId })
     }
+    static getPostByUser(id) {
+        return axios.post(url + `/user`, { id: id })
+    }
 
     static getOnePost(postId) {
             return axios.get(`${url}/${postId}`)
@@ -52,6 +55,24 @@ class PostService {
     // delete post
     static deletePost(id) {
         return axios.get(`${url}/${id}/delete`)
+    }
+    static accessPost(id) {
+        return axios.get(`${url}/${id}/access`)
+    }
+    static restorePost(id) {
+        return axios.get(`${url}/${id}/restore`)
+    }
+    static watchedNotify(id, status) {
+        return axios.post(`${url}/${id}/watched`, { status: status })
+    }
+    static apply(username, postId) {
+        return axios.post(url + `/${postId}/apply`, { username: username });
+    }
+    static accesApply(username, postId) {
+        return axios.post(url + `/${postId}/accesApply`, { username: username });
+    }
+    static refuseApply(username, postId) {
+        return axios.post(url + `/${postId}/refuseApply`, { username: username });
     }
 }
 

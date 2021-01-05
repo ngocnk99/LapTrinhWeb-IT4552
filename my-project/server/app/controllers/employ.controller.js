@@ -143,7 +143,6 @@ exports.getInfo = (req, res) => {
                     avatar: user.avatar,
                     posts: user.posts,
                     members: user.members,
-                    notify: user.notify
                 });
             })
     }
@@ -174,7 +173,6 @@ exports.editInfo = (req, res) => {
 
 exports.search = (req, res, next) => {
     const keyword = req.query.keyword;
-    console.log(keyword);
     if (keyword) {
         User.find({
                 companyName: { $regex: keyword, $options: "i" },

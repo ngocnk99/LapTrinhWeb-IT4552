@@ -69,27 +69,27 @@ export default {
           name: 'jobSearch'
         };
         route.query = {}
-        if(this.keyword != this.$route.query.keyword){
+        // if(this.keyword != this.$route.query.keyword){
           route.query.keyword = this.keyword
-        }
-         if(this.address != this.$route.query.address){
+        // }
+        // if(this.address != this.$route.query.address){
           route.query.address = this.address
-        }
+        // }
         this.$router.push(route);
       }
   },
 
   watch: {
     keyword: _.debounce(async function () {
-
         let list = []
         if (this.keyword !== '') {
           let reponseData = (await PostService.index({keyword: this.keyword})).data;
-          reponseData[0].forEach(element => {
+          let posts = reponseData[0].filter(post => post.status.status == 1);
+          posts.forEach(element => {
             list.push(element.title)
            
           });
-          reponseData[1].forEach(element => {
+          posts.forEach(element => {
             list.push(element.career)
           });
         }

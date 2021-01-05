@@ -33,12 +33,6 @@ class AdminService {
             }
         })
     }
-    accessPost(post_id) {
-        return axios.get(`${API_URL}/${post_id}/access`)
-    }
-    deletePost(post_id) {
-        return axios.get(`${API_URL}/${post_id}/delete`)
-    }
 }
 
 export default new AdminService();

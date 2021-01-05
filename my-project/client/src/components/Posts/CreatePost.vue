@@ -227,10 +227,10 @@ export default {
         this.post.employerId = this.employer.id;
         this.post.employerName = this.employer.username;
         this.post.avatar = this.employer.avatar
-        await PostService.insertPost(this.post);
-        this.$router.push({
-          name: 'posts'
-        });
+
+        const jobId = (await PostService.insertPost(this.post)).data.jobId;
+  
+        this.$router.push(`/job/${jobId}`);
       } catch (err) {
         this.error = err;
       }
