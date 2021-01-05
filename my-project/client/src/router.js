@@ -55,20 +55,21 @@ export const router = new Router({
             component: UserRegister
         },
         {
-            path: '/user/profile',
+            path: '/user/jobs-manage',
+            name: 'jobManage',
+            // lazy-loaded
+            component: () =>
+                import ('./components/User/BoardUser.vue')
+        },
+        {
+            path: '/user/:userName',
             name: 'userProfile',
             // lazy-loaded
             component: () =>
                 import ('./components/User/Profile.vue')
         },
+
         //employer
-        {
-            path: '/employer',
-            name: 'employer',
-            // lazy-loaded
-            component: () =>
-                import ('./components/Employer/BoardEmployer.vue')
-        },
         {
             path: '/employer/login',
             name: 'employerLogin',
@@ -88,6 +89,13 @@ export const router = new Router({
             path: '/employer/search',
             name: 'employerSearch',
             component: EmployerSearch
+        },
+        {
+            path: '/employer/apply-manage',
+            name: 'applyManage',
+            // lazy-loaded
+            component: () =>
+                import ('./components/Employer/BoardEmployer.vue')
         },
         {
             path: '/employer/:employerName',

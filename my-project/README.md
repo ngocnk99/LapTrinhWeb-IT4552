@@ -8,13 +8,14 @@
 	## Build Setup
 
 	``` bash
-	cd client
+	cd my-project/client
 
 	# install dependencies
 	npm install
 
 	# serve with hot reload at localhost:8081
-	npm run serve
+	npm run serve   (`````Stop here and move down to the server part if you're just experimenting`````)	
+	
 
 	# build for production with minification
 	npm run build
@@ -37,15 +38,17 @@
 
 	## Build Setup
 	
+	#install mongodb
+	link: https://docs.mongodb.com/manual/administration/install-community/
+
+
 	``` bash
- 	cd server
+ 	cd my-project/server
+
 	# install dependencies
 	npm install
+	npm install -g nodemon
 
 	# serve with hot reload at localhost:8082
 	npm run dev
-
-	
-
-
 

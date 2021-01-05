@@ -6,8 +6,6 @@ const Admin = mongoose.model(
         username: String,
         email: String,
         password: String,
-        jobs: Array,
-        cv: String,
         roles: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role"

@@ -19,14 +19,8 @@ const Post = mongoose.model(
         introduce: Array,
         request: Array,
         benefitsEnjoyed: Array,
-        status: {
-            type: Number,
-            default: 0,
-        },
-        notiStatus: {
-            type: Number,
-            default: 0,
-        }
+        jobkers: Array,
+        status: Object,
     }, {
         // Make Mongoose use Unix time (seconds since Jan 1, 1970)
         timestamps: true

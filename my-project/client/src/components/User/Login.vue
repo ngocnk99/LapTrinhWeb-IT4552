@@ -101,7 +101,7 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/user/profile');
+      this.$router.push(`/user/${this.$store.state.auth.user.username}`);
     }
   },
   methods: {
@@ -116,7 +116,8 @@ export default {
         if (this.user.username && this.user.password) {
           this.$store.dispatch('auth/login', this.user).then(
             () => {
-              this.$router.push('/user/profile');
+              this.$router.push(`/user/${this.$store.state.auth.user.username}`);
+              location.reload();
             },
             (error) => {
               this.loading = false;
@@ -146,7 +147,8 @@ export default {
             })
             .then(
               () => {
-                this.$router.push('/profile');
+                this.$router.push(`/user/${this.$store.state.auth.user.username}`);
+                location.reload();
               },
               (error) => {
                 this.loading = false;
@@ -174,7 +176,8 @@ export default {
             })
             .then(
               () => {
-                this.$router.push('/profile');
+                this.$router.push(`/user/${this.$store.state.auth.user.username}`);
+                location.reload();
               },
               (error) => {
                 this.loading = false;

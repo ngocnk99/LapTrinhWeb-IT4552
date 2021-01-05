@@ -8,38 +8,78 @@
               <font-awesome-icon icon="home" />JOBS
             </router-link>
           </li>
-          <!-- <li v-if="showAdminBoard " class="nav-item">
-            <router-link to="/admin" class="nav-link">Admin Board</router-link>
-          </li>-->
           <li v-if="currentEmployer" class="nav-item">
             <router-link to="/post/create" class="nav-link"
               >Đăng tuyển</router-link
             >
           </li>
-          <li class="nav-item">
-            <router-link v-if="currentUser" to="/user" class="nav-link"
-              >Tìm kiếm việc làm</router-link
-            >
+          <li v-if="currentUser" class="nav-item">
+            <router-link to="/employer" class="nav-link">
+              Công ty
+            </router-link>
           </li>
         </div>
 
         <div v-if="currentUser" class="navbar-nav">
-          <li class="nav-item">
-            <router-link to="/user/profile" class="nav-link">
-              <font-awesome-icon icon="user" />
-              {{ currentUser.username }}
+        <li class="nav-item">
+            <router-link to="/user/jobs-manage" class="nav-link">
+              Quản lí ứng tuyển
             </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href @click.prevent="logOut">
-             LogOut
-            </a>
+            <div class="dropdown show">
+              <a class="btn user  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <img :src="`${jobker.avatar}`" alt="" style="width:40px;border-radius:50%;">
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <router-link :to="{ name: 'userProfile', params: {userName: jobker.username } }" class="nav-link">
+                   Profile
+                </router-link>              
+                <a class="nav-link" href @click.prevent="logOut">
+                  Đăng xuất
+                </a>
+              </div>
+            </div>          
+          </li>
+          <li class="notification nav-item">
+             <div class="dropdown show">
+               <a class="btn noti-btn  dropdown-toggle" href="#" role="button" id="dropdownNoti" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-bell "></i>
+              </a>
+              <div class="notify-number">{{notify}}</div>
+              <div class="dropdown-menu " aria-labelledby="dropdownNoti">
+                <div class="no-Noti" v-if="notify == 0 ">
+                  Bạn không có thông báo nào
+                  <div class="dropdown-divider"></div>
+                </div>
+                <div class="notify" v-if="notify !=0 ">
+                   <div class="notify-wrap">
+                      <div class="notify-item-wrap"
+                         v-for="noti in notifyAplly"
+                        v-bind:key="noti.id"
+                      >
+                    
+                        <div class="notify-item" >
+                        <span v-if="noti.status == 1">
+                          Ứng tuyển công việc mã Id: <strong @click="viewNotifyApply($store.state.auth.user.username,noti.id)">"{{noti.id}}"</strong> của bạn đã được thông qua
+                        </span>
+                        <span v-if="noti.status == 2">
+                          Ứng tuyển công việc mã Id: <strong @click="viewNotifyApply($store.state.auth.user.username,noti.id)">"{{noti.title}}"</strong> của bạn đã bị từ chối
+                        </span>
+                      </div>
+                        <div class="watched" @click="watchedNotifyApply($store.state.auth.user.username,noti.id)">Xác nhận</div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+             </div>
           </li>
         </div>
+
         <div v-else-if="currentEmployer" class="navbar-nav ">
           <li class="nav-item">
-            <router-link to="/employer" class="nav-link">
-              Công ty
+            <router-link to="/employer/apply-manage" class="nav-link">
+              Quản lí ứng tuyển
             </router-link>
           </li>
           <li class="nav-item">
@@ -62,9 +102,32 @@
                <a class="btn noti-btn  dropdown-toggle" href="#" role="button" id="dropdownNoti" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fas fa-bell "></i>
               </a>
-              <div class="dropdown-menu" aria-labelledby="dropdownNoti">
-                <div class="no-Noti" v-if="employer.notify == 0 ">
+              <div class="notify-number">{{notify}}</div>
+              <div class="dropdown-menu " aria-labelledby="dropdownNoti">
+                <div class="no-Noti" v-if="notify == 0 ">
                   Bạn không có thông báo nào
+                  <div class="dropdown-divider"></div>
+                </div>
+                <div class="notify" v-if="notify !=0 ">
+                    <div class="notify-wrap">
+                      <div class="notify-item-wrap"
+                         v-for="noti in notifyPost"
+                        v-bind:key="noti._id"
+                      >
+                        <div class="notify-item" >
+                        <span v-if="noti.status.status == 1">
+                          Bài đăng tuyển <strong @click="viewNotifyPost(noti._id,noti.status.status)">"{{noti.title}}"</strong> của bạn đã được thông qua
+                        </span>
+                        <span v-if="noti.status.status == 2">
+                          Bài đăng tuyển <strong @click="viewNotifyPost(noti._id,noti.status.status)">"{{noti.title}}"</strong> của bạn đã xóa
+                        </span>
+                        <span v-if="noti.status.status == 0">
+                          Bài đăng tuyển <strong @click="viewNotifyPost(noti._id,noti.status.status)">"{{noti.title}}"</strong> của bạn đã được khôi phục
+                        </span>
+                      </div>
+                        <div class="watched" @click="watchedNotifyPost(noti._id,noti.status.status)">Xác nhận</div>
+                        </div>
+                    </div>
                 </div>
               </div>
              </div>
@@ -97,12 +160,20 @@
 
 <script>
 import EmployerService from '@/services/employer.service';
+import PostService from '@/services/PostService';
+import JobkerService from '@/services/auth.service';
 export default {
   data(){
     return{
       message:'',
-      jobkers:'',
       employer:'',
+      jobker:'',
+      posts:'',
+      notify:0,
+      notifyPost:[],
+      notifyAplly:[],
+      employerId:'',
+      jobkerID:''
     }
   },
   computed: {
@@ -130,23 +201,109 @@ export default {
     becomeEmployer(){
       this.$store.dispatch('auth/logout');
       this.$router.push('/employer/login');
+    },
+    async viewNotifyPost(id,status){
+      await PostService.watchedNotify(id,status);
+      PostService.getPostByEmployer(this.employerId).then(
+            (responseData) => {
+              this.posts = responseData.data
+              this.notifyPost = this.posts.filter(post => post.status.notify == 1);
+              this.notify = this.notifyPost.length
+            }
+      );
+      this.$router.push(`/job/${id}`);
+     
+    },
+    async viewNotifyApply(username,id){
+      await JobkerService.watchNotifyApply(username,id);
+      JobkerService.getInfo(this.currentUser.username).then(
+        (responseData) => {    
+          this.jobker = responseData.data;
+          this.notifyAplly = this.jobker.jobs.filter(element => element.notify == 1)
+          this.notify = this.notifyAplly.length;
+          this.$router.push(`/job/${id}`);
+        },
+        (error) => {
+          this.message =
+          (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+        });
+    },
+    async watchedNotifyPost(id,status){
+      await PostService.watchedNotify(id,status);
+      PostService.getPostByEmployer(this.employerId).then(
+            (responseData) => {
+              this.posts = responseData.data
+              this.notifyPost = this.posts.filter(post => post.status.notify == 1);
+              this.notify = this.notifyPost.length
+            }
+      );
+    },
+    async watchedNotifyApply(username,id){
+      await JobkerService.watchNotifyApply(username,id);
+      JobkerService.getInfo(this.currentUser.username).then(
+        (responseData) => {    
+          this.jobker = responseData.data;
+          this.notifyAplly = this.jobker.jobs.filter(element => element.notify == 1)
+          this.notify = this.notifyAplly.length;
+        },
+        (error) => {
+          this.message =
+          (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+        });
     }
   },
   async created(){
       if(this.currentEmployer){
-      EmployerService.getInfo(this.currentEmployer.username).then(
-      (responseData) => {    
-        this.employer = responseData.data;
-      },
-      (error) => {
-        this.message =
-         (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      });
+        EmployerService.getInfo(this.currentEmployer.username).then(
+        (responseData) => {    
+          this.employer = responseData.data;
+          return responseData.data.id
+        },
+        (error) => {
+          this.message =
+          (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+        })
+        .then((Id) => {
+          this.employerId = Id
+          PostService.getPostByEmployer(this.employerId).then(
+              (responseData) => {
+                this.posts = responseData.data
+                this.notifyPost = this.posts.filter(post => post.status.notify == 1);
+                this.notify = this.notifyPost.length
+              }
+          );
+        });
       }
+      if(this.currentUser){
+        JobkerService.getInfo(this.currentUser.username).then(
+        (responseData) => {    
+          this.jobker = responseData.data;
+          this.notifyAplly = this.jobker.jobs.filter(element => element.notify == 1)
+          this.notify = this.notifyAplly.length
+        },
+        (error) => {
+          this.message =
+          (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+        });
+      }
+      
+      
   }
 };
 </script>
@@ -200,7 +357,52 @@ export default {
           }
         }
         .dropdown-menu{
-          left: -230%;
+          min-width: 15rem;
+          max-height: 50vh;
+          overflow-y: auto;
+          right: 0;
+          left:auto;
+        }
+        .notify-wrap{
+          margin: 0 10px;
+          font-size: 0.875rem;
+          width: 16rem;
+         
+        }
+        
+        .notify-item-wrap{
+           position: relative;
+           padding-bottom:14px;
+           border-bottom: 1px solid rgb(212, 210, 210) ;
+        }
+        .watched{
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          color:#00b14f
+        }
+        .notify-item{
+          padding: 6px 0;
+          overflow: hidden; 
+          max-height: 72px;
+          span{
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            display: -webkit-box;
+          }
+          strong{
+            cursor: pointer;
+          }
+         
+        }
+        .notify-number{
+          position: absolute;
+          padding: 2px 6px;
+          background-color: #00b14f;
+          color: white;
+          border-radius: 50% ;
+          top:0px;
+          right: 8px;
         }
       }
     }

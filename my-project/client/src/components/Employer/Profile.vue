@@ -77,10 +77,13 @@
               <div class="btn-edit" v-if="currentEmployer && editSuccesfull" >
                 {{message}}             
               </div>
-              <div class="btn-edit" v-if="editStatus" @click="editInfo">
+              <div class="btn-edit" v-if="waiting" >
+                Đang thay đổi <i class="fas fa-spinner" style="color:#ffc107"></i>          
+              </div>
+              <div class="btn-edit" v-if="editStatus&&!waiting" @click="editInfo">
                 <button class="btn button-primary ">Hoàn thành</button>              
               </div>
-              <div class="btn-edit" v-if="editStatus" @click="notEditInfo">
+              <div class="btn-edit" v-if="editStatus&&!waiting" @click="notEditInfo">
                 <button class="btn button-cancle ">Hủy</button>              
               </div>
             </div>
@@ -124,20 +127,27 @@
                     v-for="(info, index) in posts"
                     :key="index"
                   >
-                    <h5><a href=""> {{info.title}}</a></h5>
-                    <div class="row">
-                      <div class="col-md-3 col-sm-6 job-deadline job-meta-data text-dark-gray"><i class="fas fa-clock "></i>{{info.dateline}}</div>
-                      <div class="col-md-3 col-sm-6 job-salary  job-meta-data text-dark-gray"><i class="fas fa-dollar-sign"></i>{{info.salary}}</div>
-                      <div class="col-md-3 col-sm-6 job-location  job-meta-data text-dark-gray"><i class="fas fa-map-marker-alt"></i>{{employer.address}}</div>
-                      <div class="col-md-3 col-sm-6 job-type  job-meta-data text-dark-gray"><i class="fas fa-briefcase"></i>{{info.formOfWork}}</div>
+                    <div class="post-item" v-if="currentEmployer|| info.status.status == 1">
+                      <h5><a :href="`/job/${info._id}`"> {{info.title}}</a></h5>
+                      <div class="row">
+                        <div class="col-md-3 col-sm-6 job-deadline job-meta-data text-dark-gray"><i class="fas fa-clock "></i>{{info.dateline}}</div>
+                        <div class="col-md-3 col-sm-6 job-salary  job-meta-data text-dark-gray"><i class="fas fa-dollar-sign"></i>{{info.salary}}</div>
+                        <div class="col-md-3 col-sm-6 job-location  job-meta-data text-dark-gray"><i class="fas fa-map-marker-alt"></i>{{employer.address}}</div>
+                        <div class="col-md-3 col-sm-6 job-type  job-meta-data text-dark-gray"><i class="fas fa-briefcase"></i>{{info.formOfWork}}</div>
+                      </div>
+                      <span
+                      class="post-job-wrap"
+                      >
+                        {{info.career}}
+                      </span>
+                      <div style="float:right" v-if="currentEmployer">
+                          <div v-if="info.status.status == 0"> Chờ kiểm duyệt <i class="fas fa-spinner" style="color:#ffc107"></i></div>
+                          <div v-if="info.status.status == 1"> Đã kiểm duyệt <i class="fas fa-check" style="color:#28a745"></i></div>
+                          <div v-if="info.status.status == 2"> Đã xóa <i class="fas fa-trash-alt" style="color:#dc3545"></i></div>
+                      </div>  
                     </div>
-                    <span
-                    class="post-job-wrap"
-                    >
-                      {{info.career}}
-                    </span>
                   </div>
-                  <div class="d-flex" v-if="editStatus">
+                  <div class="d-flex" v-if="!editStatus&&currentEmployer">
                     <div class="add-button " @click="$router.push('/post/create');"></div>                 
                   </div>
                 </div>
@@ -190,7 +200,7 @@ import PostService from '@/services/PostService';
 import Employer from '@/models/employer'
 import employerService from '@/services/employer.service';
 export default {
-  name: 'Profile',
+  name: 'employerProfile',
   data() {
     return {
       editSuccesfull : false,
@@ -202,10 +212,12 @@ export default {
       message: '',
       banner:null,
       avatar:null,
+      waiting:false,
     };
   },
   methods:{
     async editInfo(){
+      this.waiting = true;
       if(this.employer.banner != this.employerForEdit.banner){
        this.employer.banner =  await this.onUploadFile(this.banner,'banner');
       }else{
@@ -233,6 +245,7 @@ export default {
       this.employerForEdit = JSON.parse(JSON.stringify(this.employer)) 
       this.editSuccesfull = !this.editSuccesfull;
       this.editStatus = !this.editStatus;
+      this.waiting = false;
     },
     notEditInfo(){
       this.employer = JSON.parse(JSON.stringify(this.employerForEdit)) 
@@ -289,22 +302,12 @@ export default {
       })  
     },
   },  
-  computed: {
-    currentUser() {
-      return this.$store.state.employ.user;
-    },
-    disabled() {
-      return false;
-    }
-  },
   mounted() {
     if (this.$store.state.employ.user) {
       if(this.$route.params.employerName == this.$store.state.employ.user.username){
        this.currentEmployer = true;
       }
-    }
-   
-    
+    }  
   },
   async created() {
     let emplyerName = this.$route.params.employerName
@@ -430,8 +433,10 @@ export default {
         margin-top:15px;
       }
       .post-wrap{
-        border-bottom: 1px solid gray;
-        padding-bottom: 10px;
+        .post-item{
+           border-bottom: 1px solid gray;
+           padding-bottom: 10px;
+        }
         .post-job-wrap{
           background-color: rgb(224, 219, 219);
           border-radius: 5px;

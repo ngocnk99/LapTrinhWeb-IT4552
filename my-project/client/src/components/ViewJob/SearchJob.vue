@@ -132,7 +132,7 @@ export default {
     $route: async function(){
       let respondata = (await PostService.index(this.$route.query)).data;
       this.jobs = this.getUniqueListBy(respondata[0].concat(respondata[1]),'_id'); 
-       
+      this.jobs = this.jobs.filter(post => post.status.status == 1);
     }
    
   },
@@ -149,7 +149,9 @@ export default {
   },
   async created(){
      let respondata = (await PostService.index(this.$route.query)).data;
-      this.jobs = this.getUniqueListBy(respondata[0].concat(respondata[1]),'_id');
+     this.jobs = this.getUniqueListBy(respondata[0].concat(respondata[1]),'_id');
+     this.jobs = this.jobs.filter(post => post.status.status == 1);
+     
   }
 };
 </script>
@@ -158,6 +160,7 @@ export default {
 <style lang="scss" scoped>
 
 .afterSearch-main{
+  min-height: 76vh;
   background-color: #f6fbf9;
   .result-search-companies{
     .result-search-job{
